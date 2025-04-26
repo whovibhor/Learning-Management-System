@@ -60,23 +60,25 @@
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
                     <div class="space-y-4">
-                        @forelse($recentActivities ?? [] as $activity)
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <div class="p-2 rounded-full bg-gray-100">
-                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
+                        @if(isset($recentActivities) && count($recentActivities) > 0)
+                            @foreach($recentActivities as $activity)
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="p-2 rounded-full bg-gray-100">
+                                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-600">{{ isset($activity->description) ? $activity->description : 'No description' }}</p>
+                                        <p class="text-xs text-gray-500">{{ isset($activity->created_at) ? $activity->created_at->diffForHumans() : 'Unknown time' }}</p>
                                     </div>
                                 </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-gray-600">{{ $activity->description }}</p>
-                                    <p class="text-xs text-gray-500">{{ $activity->created_at->diffForHumans() }}</p>
-                                </div>
-                            </div>
-                        @empty
+                            @endforeach
+                        @else
                             <p class="text-gray-500">No recent activity</p>
-                        @endforelse
+                        @endif
                     </div>
                 </div>
             </div>

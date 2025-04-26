@@ -115,23 +115,27 @@
         <div class="p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Recent System Logs</h3>
             <div class="space-y-4">
-                @forelse($systemLogs ?? [] as $log)
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <div class="p-2 rounded-full {{ $log->type === 'error' ? 'bg-red-100' : 'bg-gray-100' }}">
-                                <svg class="w-5 h-5 {{ $log->type === 'error' ? 'text-red-600' : 'text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                @if(isset($systemLogs) && is_array($systemLogs) && count($systemLogs) > 0)
+                    @foreach($systemLogs as $log)
+                        @if(is_object($log))
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="p-2 rounded-full {{ isset($log->type) && $log->type === 'error' ? 'bg-red-100' : 'bg-gray-100' }}">
+                                    <svg class="w-5 h-5 {{ isset($log->type) && $log->type === 'error' ? 'text-red-600' : 'text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-600">{{ isset($log->message) ? $log->message : 'No message' }}</p>
+                                <p class="text-xs text-gray-500">{{ (isset($log->created_at) && method_exists($log->created_at, 'diffForHumans')) ? $log->created_at->diffForHumans() : 'Unknown time' }}</p>
                             </div>
                         </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-gray-600">{{ $log->message }}</p>
-                            <p class="text-xs text-gray-500">{{ $log->created_at->diffForHumans() }}</p>
-                        </div>
-                    </div>
-                @empty
+                        @endif
+                    @endforeach
+                @else
                     <p class="text-gray-500">No recent system logs</p>
-                @endforelse
+                @endif
             </div>
         </div>
     </div>
